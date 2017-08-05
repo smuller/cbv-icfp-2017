@@ -82,6 +82,8 @@ fun json_object [JPair ("me", JString name)] = JM (PSHandshake name)
   | json_object [JPair ("moves", JList ms),
                  JPair ("scores", JList ss)] =
     JMovesScores (List.map unmove ms, List.map unscore ss)
+  | json_object [JPair ("punter", JInt p),
+                 JPair ("score", JInt s)] = JScore (p, s)
   | json_object [JPair ("stop", JMovesScores (ms, ss)),
                  JPair ("state", JState s)] = JM (Stop (ms, ss, s))
   | json_object [JPair ("pid", JInt p),

@@ -40,6 +40,18 @@ fun sendMsg p (sock, m) =
         sendString (sock, s)
     end
 
+fun recvLength (sock, n) =
+    if n <= 0 then ""
+    else
+        let val v = N.recvVec (sock, n)
+            val s = Vector.map (fn n => Char.chr (Word8.toInt n)) v
+            val n' = String.size s
+        in
+            if n' = n then s
+            else
+                s ^ (recvLength (sock, n - n'))
+        end
+
 fun recvMsg sock =
     let val v = N.recvVec (sock, 10)
         val s = Vector.map (fn n => Char.chr (Word8.toInt n)) v
@@ -49,10 +61,7 @@ fun recvMsg sock =
                       in
                           (case Int.fromString n of
                                SOME n =>
-                               s ^
-                               (Vector.map
-                                    (fn n => Char.chr (Word8.toInt n))
-                                    (N.recvVec (sock, n - (String.size s))))
+                               s ^ (recvLength (sock, n - (String.size s)))
                              | NONE => raise (InvalidMSG "no n:"))
                       end
                     | _ => raise (InvalidMSG "no n:")

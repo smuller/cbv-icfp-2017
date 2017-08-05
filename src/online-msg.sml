@@ -71,6 +71,8 @@ fun json_object [JPair ("me", JString name)] = JM (PSHandshake name)
   | json_object [JPair ("moves", JList ms),
                  JPair ("scores", JList ss)] =
     JMovesScores (List.map unmove ms, List.map unscore ss)
+  | json_object [JPair ("punter", JInt p),
+                 JPair ("score", JInt s)] = JScore (p, s)
   | json_object [JPair ("stop", JMovesScores (ms, ss))] = JM (Stop (ms, ss))
   | json_object _ = raise (InvalidMSG "json_object")
 

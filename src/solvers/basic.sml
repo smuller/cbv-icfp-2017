@@ -23,7 +23,7 @@ fun solve (map, punters, state, punter) =
                                evaled
                 end
     in
-        #1 (minimax 2 punter state)
+        #1 (minimax 1 punter state)
     end
 
 end
